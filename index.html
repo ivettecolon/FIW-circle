@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Expression Circle</title>
+      
+    <script src="https://unpkg.com/jspsych@7.2.1"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-image-button-response@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-fullscreen@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-audio-button-response@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-audio-keyboard-response@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-multi-select@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-call-function@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-free-sort@1.0.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.0"></script>
+    <link href="https://unpkg.com/jspsych@7.2.1/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
+      
+      
+  </head>
+  <body></body>
+    
+    
+    
+  <script>
+      
+    /* This is the circle experiment for a selection of faces from the DFEW database. This is for the Faces in the Wild project. We will edit this experiment to work with VIDEOS. */      
+
+          
+    var jsPsych = initJsPsych({
+        show_progress_bar:true,
+        on_data_update: function(){
+            var filename = "fiw_circle_" + subject_id; // can change this line to costumize how data files are named
+            jsPsych.data.addProperties({worker_id: urlvar.workerId});
+            timeline.push(save_data);
+        },
+        on_finish: function(){
+            var filename = "fiw_circle_" + subject_id;
+            jsPsych.data.addProperties({worker_id: urlvar.workerId});
+            timeline.push(save_data);
+        }
+    });
+      
+      const save_data = {
+                type: jsPsychPipe,
+                action: "save",
+                experiment_id: "zgn84QSEULUj",
+                filename: filename,
+                data_string: ()=>jsPsych.data.get().csv()
+              };
+      
+
+          /* create timeline */
+    var timeline = [];
+    
+    const subject_id = jsPsych.randomization.randomID(10); 
+    var filename = "fiw_circle_" + subject_id; // can change this line to costumize how data files are named
+
+      
+      var urlvar = jsPsych.data.urlVariables();  
+      
+    
+    var preload = {
+        type: jsPsychPreload,
+        auto_preload: true,
+        images: ['resources/1.mp4',
+                'resources/1000.mp4',
+                'resources/1006.mp4',
+                'resources/1011.mp4',
+                'resources/1013.mp4',
+                'resources/1025.mp4',
+                'resources/1037.mp4',
+                'resources/1042.mp4',
+                'resources/1060.mp4',
+                'resources/1066.mp4',
+                'resources/1068.mp4',
+                'resources/1089.mp4',
+                'resources/1110.mp4',
+                'resources/1164.mp4',
+                'resources/1172.mp4',
+                'resources/1175.mp4',
+                'resources/1183.mp4',
+                'resources/1184.mp4',
+                'resources/1227.mp4',
+                'resources/1253.mp4',
+                'resources/1278.mp4',
+                'resources/1291.mp4',
+                'resources/1302.mp4',
+                'resources/7.mp4'],
+        show_progress_bar: true,
+        message: "Loading experiment files...",
+        error_message: "Oops! There's a problem loading files. Please refresh the page to try again."
+    }  
+    timeline.push(preload);
+    
+    
+      
+      // and a version where it's an array of strings (for ease of shuffling)
+      var faces_arr = ['resources/1.mp4',
+                        'resources/1000.mp4',
+                        'resources/1006.mp4',
+                        'resources/1011.mp4',
+                        'resources/1013.mp4',
+                        'resources/1025.mp4',
+                        'resources/1037.mp4',
+                        'resources/1042.mp4',
+                        'resources/1060.mp4',
+                        'resources/1066.mp4',
+                        'resources/1068.mp4',
+                        'resources/1089.mp4',
+                        'resources/1110.mp4',
+                        'resources/1164.mp4',
+                        'resources/1172.mp4',
+                        'resources/1175.mp4',
+                        'resources/1183.mp4',
+                        'resources/1184.mp4',
+                        'resources/1227.mp4',
+                        'resources/1253.mp4',
+                        'resources/1278.mp4',
+                        'resources/1291.mp4',
+                        'resources/1302.mp4',
+                        'resources/7.mp4'];
+
+      
+      
+    /* define welcome message trial */
+    var welcome = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: "Welcome to the experiment. Press any key to begin."
+    };
+    timeline.push(welcome);
+      
+      // makes experiment full screen
+    timeline.push({
+      type: jsPsychFullscreen,
+      fullscreen_mode: true
+    });    
+         
+    /* define consent trial */
+    var consent = {
+        type: jsPsychImageButtonResponse,
+        stimulus: "kc_lab_consent_SONA.png",
+        choices: ["Consent & Continue"]
+    };
+    timeline.push(consent);
+      
+      
+          
+    /* define testing instructions */
+    var instructions = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: "<p>In this experiment, you will organize faces based on the similarity of the emotion they express." +
+          "<p>Click 'Continue' to begin the test.</p>",
+        choices: ["Continue"],
+      post_trial_gap: 2000
+    };
+    timeline.push(instructions);  
+      
+      
+      
+   //to shuffle the array of button choices at the beginning of the experiment   
+    function shuffle(array) {
+        let currentIndex = array.length,  randomIndex;
+        // While there remain elements to shuffle.
+        while (currentIndex != 0) {
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+      
+      faces_arr = shuffle(faces_arr);
+      
+      
+      // trial definition
+    var sort_trial = {
+        type: jsPsychFreeSort,
+        stimuli: function(){
+            let new_array = [];
+            new_array = faces_arr.splice(0, 15);
+            return new_array;
+        },    
+        prompt: "<p>Click and drag the images below to sort them so that <strong>emotionally similar</strong> items are close together.</p>"
+    };
+      timeline.push(sort_trial);
+      
+
+
+    var demographic_instructions = {
+          type: jsPsychHtmlButtonResponse,
+          stimulus: "<p>Awesome!<p>For this last part of the experiment, please provide us with information about yourself.</p> ",
+          choices: ["Continue"],
+          post_trial_gap: 1000
+        };
+    timeline.push(demographic_instructions);
+
+
+    var demographics = {
+        type: jsPsychSurveyMultiSelect,
+        questions: [
+          {prompt: "Which categories describe you? Select all that apply to you:", 
+            options: ["American Indian or Alaska Native - For example, Navajo Nation, Mayan", 
+                      "Asian - For example, Chinese, Asian Indian",
+                      "Black or African American - For example, Jamaican, Ethiopian",
+                      "Hispanic or Latino - For example, Mexican or Mexican American, Puerto Rican, Salvadoran",
+                     "Middle Eastern or North African - For example, Lebanese, Iranian, Moroccan",
+                     "Native Hawaiian or Other Pacific Islander - For example, Somoan, Fijian",
+                     "White - For example, German, Irish",
+                     "Some other race, ethnicity, or origin",
+                     "I prefer not to answer"], 
+            horizontal: false,
+            required: true,
+            name: 'race_eth'}
+        ]};
+        timeline.push(demographics);  
+
+    
+      
+    var id_age = {
+      type: jsPsychSurveyText,
+      questions: [{prompt: "Please enter your age (in years):", rows: 1, columns: 6, name: "age", required: true}, 
+                  {prompt: "How do you currently describe your gender identity? Please specify.", rows: 1, columns: 60, name: "gender"},
+                  {prompt: "What is your ZIP code?", rows : 1, columns: 6, name: "zip"}
+                 ]
+    };
+    timeline.push(id_age);
+      
+      
+      
+   var goodbye = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: function(){
+        output = "Woohoo! You have finished the experiment. <br>";
+        //if(urlvar.workerId.length > 7){ // for if we need to pay prolific participants
+        //      output = output + "<strong> Here is your secret code: " + secret_code + "</strong><br>";
+        //  }
+        output = output + "You may now close this screen. Goodbye!<br><br>";
+      return output;
+      },
+      choices: ["Complete Experiment"]    
+   };
+    timeline.push(goodbye);
+
+
+      
+    jsPsych.run(timeline);
+
+
+
+  </script>
+  </html>
+
+<!--
+
+-->
